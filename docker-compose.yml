@@ -1,0 +1,5 @@
+version: "3"
+
+networks:
+  mek_network:
+    name: mek_network

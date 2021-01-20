@@ -1,0 +1,72 @@
+version: "3"
+services:
+  elasticsearch01:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.1
+    container_name: elasticsearch01
+    environment:
+      - node.name=elasticsearch01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elasticsearch02,elasticsearch03
+      - cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch01-data:/usr/share/elasticsearch/data
+    ports:
+      - 127.0.0.1:9200:9200
+    networks:
+      - mek_network
+
+  elasticsearch02:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.1
+    container_name: elasticsearch02
+    environment:
+      - node.name=elasticsearch02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elasticsearch01,elasticsearch03
+      - cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch02-data:/usr/share/elasticsearch/data
+    networks:
+      - mek_network
+
+  elasticsearch03:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.1
+    container_name: elasticsearch03
+    environment:
+      - node.name=elasticsearch03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=elasticsearch01,elasticsearch02
+      - cluster.initial_master_nodes=elasticsearch01,elasticsearch02,elasticsearch03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elasticsearch03-data:/usr/share/elasticsearch/data
+    networks:
+      - mek_network
+
+volumes:
+  elasticsearch01-data:
+    driver: local
+  elasticsearch02-data:
+    driver: local
+  elasticsearch03-data:
+    driver: local
+
+networks:
+  mek_network:
+    name: mek_network

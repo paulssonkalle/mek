@@ -1,0 +1,58 @@
+version: "3"
+services:
+  mongodb01:
+    image: "mongo:4.4-bionic"
+    container_name: mongodb01
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: mongod --keyFile /keyfile --replSet "rs0" --dbpath /data/db
+    volumes:
+      - mongo01-data:/data
+      - "${PROJECT_DIR}/mongodb/keyfile:/keyfile"
+    networks:
+      - mek_network
+
+  mongodb02:
+    image: "mongo:4.4-bionic"
+    container_name: mongodb02
+    ports:
+      - "27027:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: mongod --keyFile /keyfile --replSet "rs0" --dbpath /data/db
+    volumes:
+      - mongo02-data:/data
+      - "${PROJECT_DIR}/mongodb/keyfile:/keyfile"
+    networks:
+      - mek_network
+
+  mongodb03:
+    image: "mongo:4.4-bionic"
+    container_name: mongodb03
+    ports:
+      - "27037:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: mongod --keyFile /keyfile --replSet "rs0" --dbpath /data/db
+    volumes:
+      - mongo03-data:/data
+      - "${PROJECT_DIR}/mongodb/keyfile:/keyfile"
+    networks:
+      - mek_network
+
+volumes:
+  mongo01-data:
+    driver: local
+  mongo02-data:
+    driver: local
+  mongo03-data:
+    driver: local
+
+networks:
+  mek_network:
+    name: mek_network

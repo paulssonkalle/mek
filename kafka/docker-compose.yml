@@ -1,0 +1,84 @@
+version: "3"
+services:
+  zookeeper01:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper01
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    volumes:
+      - "zookeeper01-data:/var/lib/zookeeper/data"
+      - "zookeeper01-transaction-logs:/var/lib/zookeeper/log"
+    networks:
+      - mek_network
+
+  kafka01:
+    image: confluentinc/cp-kafka
+    container_name: kafka01
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper01:2181
+      KAFKA_LISTENERS: DOCKER_NETWORK://kafka01:9092,HOST_NETWORK://:19092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER_NETWORK://kafka01:9092,HOST_NETWORK://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_NETWORK:PLAINTEXT,HOST_NETWORK:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_NETWORK
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "kafka01-data:/var/lib/kafka/data"
+    networks:
+      - mek_network
+
+  kafka02:
+    image: confluentinc/cp-kafka
+    container_name: kafka02
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper01:2181
+      KAFKA_LISTENERS: DOCKER_NETWORK://kafka02:9092,HOST_NETWORK://:29092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER_NETWORK://kafka02:9092,HOST_NETWORK://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_NETWORK:PLAINTEXT,HOST_NETWORK:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_NETWORK
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "kafka02-data:/var/lib/kafka/data"
+    networks:
+      - mek_network
+
+  kafka03:
+    image: confluentinc/cp-kafka
+    container_name: kafka03
+    ports:
+      - "39092:39092"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper01:2181
+      KAFKA_LISTENERS: DOCKER_NETWORK://kafka03:9092,HOST_NETWORK://:39092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER_NETWORK://kafka03:9092,HOST_NETWORK://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER_NETWORK:PLAINTEXT,HOST_NETWORK:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER_NETWORK
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - "kafka03-data:/var/lib/kafka/data"
+    networks:
+      - mek_network
+
+volumes:
+  zookeeper01-data:
+    driver: local
+  zookeeper01-transaction-logs:
+    driver: local
+  kafka01-data:
+    driver: local
+  kafka02-data:
+    driver: local
+  kafka03-data:
+    driver: local
+
+networks:
+  mek_network:
+    name: mek_network
