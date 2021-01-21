@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d @kafka_source_config.json http://localhost:8083/connectors -w "\n"

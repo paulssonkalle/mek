@@ -1,0 +1,12 @@
+{
+    "name": "mongodb-source",
+    "config": {
+      "tasks.max": "1",
+      "connector.class": "com.mongodb.kafka.connect.MongoSourceConnector",
+      "connection.uri": "mongodb://root:root@mongodb01:27017,mongodb02:27017,mongodb03:27017",
+      "topic.prefix": "mongodb",
+      "database": "ipa",
+      "collection": "device_directory",
+      "copy.existing": "true"
+    }
+}
