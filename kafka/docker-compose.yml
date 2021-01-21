@@ -67,6 +67,35 @@ services:
     networks:
       - mek_network
 
+  kafka_connect01:
+    image: confluentinc/cp-kafka-connect
+    container_name: kafka_connect01
+    ports:
+      - "8083:8083"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "kafka01:9092,kafka02:9092,kafka03:9092"
+      CONNECT_ZOOKEEPER_CONNECT: "zookeeper01:2181"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "quickstart"
+      CONNECT_CONFIG_STORAGE_TOPIC: "quickstart-config"
+      CONNECT_OFFSET_STORAGE_TOPIC: "quickstart-offsets"
+      CONNECT_STATUS_STORAGE_TOPIC: "quickstart-status"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka_connect01"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
+    volumes:
+      - "/home/kalle/code/mongo-es-kafka/jars:/etc/kafka-connect/jars"
+    networks:
+      - mek_network
+    depends_on:
+      - zookeeper01
+      - kafka01
+      - kafka02
+      - kafka03
+
 volumes:
   zookeeper01-data:
     driver: local

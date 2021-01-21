@@ -1,5 +1,7 @@
 package com.kallepaulsson.producer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +12,7 @@ import java.time.Instant;
 
 @SpringBootApplication
 public class ProducerApplication {
-
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     private final static String TOPIC = "timestamps";
 
     private final KafkaTemplate<String, String> template;
@@ -27,7 +29,9 @@ public class ProducerApplication {
     CommandLineRunner runner() {
         return args -> {
             while (true) {
-                template.send(TOPIC, String.valueOf(Instant.now().getEpochSecond()));
+                var timestamp = String.valueOf(Instant.now().getEpochSecond());
+                template.send(TOPIC, timestamp);
+                LOG.info(String.format("Sent timestamp: %s", timestamp));
                 Thread.sleep(1000);
             }
         };

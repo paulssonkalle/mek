@@ -16,7 +16,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 @SpringBootApplication
 public class ConsumerApplication {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConsumerApplication.class);
+    private final Logger LOG = LoggerFactory.getLogger(this.getClass());
     public static final String TOPIC = "timestamps";
 
     public static void main(String[] args) {
